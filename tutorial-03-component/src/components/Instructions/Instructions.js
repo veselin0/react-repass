@@ -1,4 +1,5 @@
 import { Component } from "react";
+import './Instructions.css'
 import logo from './logo.svg';
 
 export default class Instructions extends Component {
