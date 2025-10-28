@@ -4,6 +4,9 @@
 		scientificName: "Panthero leo",
 		size: 140,
 		diet: ["meat"],
+		additional: {
+			notes: "No Additional Information"
+		}
 	},
 	{
 		name: "Gorilla",
