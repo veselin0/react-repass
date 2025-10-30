@@ -12,6 +12,19 @@ export default class Product extends Component {
 		total: 0,
 	};
 
+	add = () => {
+		this.setState({
+			cart: ["ice cream"],
+			total: 5,
+		});
+	};
+
+	remove = () => {
+		this.setState({
+			cart: [],
+		});
+	};
+
 	currencyOptions = {
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2,
@@ -23,7 +36,7 @@ export default class Product extends Component {
 	render() {
 		return (
 			<div className="wrapper">
-				<div>ShoppingCart: {this.state.cart.length}</div>
+				<div>ShoppingCart: {this.state.cart.length} total items</div>
 				<div>Total: {this.getTotal()}</div>
 
 				<div className="product">
@@ -31,8 +44,8 @@ export default class Product extends Component {
 						{emoji.emoji}
 					</span>
 				</div>
-				<button>Add</button>
-				<button>Remove</button>
+				<button onClick={this.add}>Add</button>
+				<button onClick={this.remove}>Remove</button>
 			</div>
 		);
 	}
