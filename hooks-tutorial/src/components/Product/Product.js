@@ -6,8 +6,7 @@ const currencyOptions = {
 	maximumFractionDigits: 2,
 };
 
-function getTotal(cart) {
-	const total = cart.reduce((totalCost, item) => totalCost + item, ?)
+function getTotal(total) {
 	return total.toLocaleString(undefined, currencyOptions);
 }
 
@@ -29,35 +28,23 @@ const products = [
 	},
 ];
 
-function cartReducer(state, action) {
-	switch (action.type) {
-		case "add":
-			return [...state, action.product];
-		case "remove":
-			const productIndex = state.findIndex(item => item.name === products.name)
-			if (productIndex < 0) {
-				return state;
-			}
-			const update = [...state];
-			update.splice(productIndex, 1);
-			return update;
-		default:
-			return state;
-	}
+function cartReducer(state, product) {
+	return [...state, product];
 }
 
-function totalCostReducer(state, action) {
-	if (action.type === "add") {
-		return state + action.price;
-	}
+function totalReducer(state, action) {
+	if (action.type === "add") return state + action.price;
 	return state - action.price;
 }
 
 export default function Product() {
 	const [cart, setCart] = useReducer(cartReducer, []);
+	const [total, setTotal] = useReducer(totalReducer, 0);
 
 	function add(product) {
-		setCart({ product, type: "add" });
+		const { name, price} = product;
+		setCart(name);
+		setTotal({price, type: "add"});
 	}
 
 	function remove(product) {
@@ -67,7 +54,7 @@ export default function Product() {
 	return (
 		<div className="wrapper">
 			<div>Shopping Cart: {cart.length} total items</div>
-			<div>Total Price: {getTotal(cart)}</div>
+			<div>Total Price: {getTotal(total)}</div>
 			<div>
 				{products.map((product) => (
 					<div key={product.name}>
@@ -81,7 +68,7 @@ export default function Product() {
 							</span>
 						</div>
 						<button onClick={() => add(product)}>Add</button>
-						<button onClick={() => remove(product)}>Remove</button>
+						<button>Remove</button>
 					</div>
 				))}
 			</div>
