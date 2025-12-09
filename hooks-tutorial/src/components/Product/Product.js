@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useState } from "react";
 import "./Product.css";
 
 const currencyOptions = {
@@ -6,9 +6,6 @@ const currencyOptions = {
 	maximumFractionDigits: 2,
 };
 
-function getTotal(total) {
-	return total.toLocaleString(undefined, currencyOptions);
-}
 
 const products = [
 	{
@@ -28,33 +25,42 @@ const products = [
 	},
 ];
 
-function cartReducer(state, product) {
-	return [...state, product];
-}
-
-function totalReducer(state, action) {
-	if (action.type === "add") return state + action.price;
-	return state - action.price;
-}
-
 export default function Product() {
-	const [cart, setCart] = useReducer(cartReducer, []);
-	const [total, setTotal] = useReducer(totalReducer, 0);
+
+	const [state, setState] = useState({ cart: [], total: 0 });
 
 	function add(product) {
-		const { name, price} = product;
-		setCart(name);
-		setTotal({price, type: "add"});
+		setState((state) => ({
+			cart: [...state.cart, product],
+		}));
 	}
 
 	function remove(product) {
-		setCart({ product, type: "remove" });
+		setState((state) => {
+			const cart = [...state.cart];
+			const productIndex = cart.findIndex(() => product.name);
+			// if (productIndex < 0) {
+			// 	return;
+			// }
+			cart.splice(productIndex, 1);
+			return {
+				cart,
+			};
+		});
+	};
+
+	function getTotal() {
+		const total = state.cart.reduce(
+			(totalCost, item) => totalCost + item.price,
+			0
+		);
+		return total.toLocaleString(undefined, currencyOptions);
 	}
 
 	return (
 		<div className="wrapper">
-			<div>Shopping Cart: {cart.length} total items</div>
-			<div>Total Price: {getTotal(total)}</div>
+			<div>Shopping Cart: {state.cart.length} total items</div>
+			<div>Total Price: {getTotal(state.total)}</div>
 			<div>
 				{products.map((product) => (
 					<div key={product.name}>
@@ -68,7 +74,7 @@ export default function Product() {
 							</span>
 						</div>
 						<button onClick={() => add(product)}>Add</button>
-						<button>Remove</button>
+						<button onClick={() => remove(product)}>Remove</button>
 					</div>
 				))}
 			</div>
